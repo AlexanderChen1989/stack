@@ -29,6 +29,26 @@ func (conn Conn) WriteHeader(code int) {
 	conn.ResponseWriter.WriteHeader(code)
 }
 
+// Deadline delegate to Context.Deadline
+func (conn Conn) Deadline() (deadline time.Time, ok bool) {
+	return conn.Context.Deadline()
+}
+
+// Done delegate to Context.Done
+func (conn Conn) Done() <-chan struct{} {
+	return conn.Context.Done()
+}
+
+// Err delegate to Context.Err
+func (conn Conn) Err() error {
+	return conn.Context.Err()
+}
+
+// Value delegate to Context.Value
+func (conn Conn) Value(key interface{}) interface{} {
+	return conn.Context.Value(key)
+}
+
 // WithCancel delegate to context.WithCancel
 func WithCancel(conn Conn) (Conn, context.CancelFunc) {
 	ctx, cancel := context.WithCancel(conn.Context)

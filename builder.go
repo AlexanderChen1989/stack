@@ -6,10 +6,12 @@ import (
 	"golang.org/x/net/context"
 )
 
+// Builder build pipeline of Pluggers
 type Builder struct {
 	pluggers []Plugger
 }
 
+// NewBuilder create a new Builder
 func NewBuilder(ps ...Plugger) *Builder {
 	base := []Plugger{emptyPlugger{}}
 	return &Builder{
@@ -17,10 +19,12 @@ func NewBuilder(ps ...Plugger) *Builder {
 	}
 }
 
+// Plug plug Plugger to Builder
 func (builder *Builder) Plug(plug Plugger) {
 	builder.pluggers = append(builder.pluggers, plug)
 }
 
+// Build build pipeline of Pluggers to a single Plugger
 func (builder *Builder) Build() Plugger {
 	p := builder.pluggers[0]
 
@@ -31,6 +35,7 @@ func (builder *Builder) Build() Plugger {
 	return p
 }
 
+// BuildHTTPHandler build pipeline of Pluggers to a single http.Handler
 func (builder *Builder) BuildHTTPHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		conn := Conn{
