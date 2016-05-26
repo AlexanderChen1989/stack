@@ -7,6 +7,19 @@ type Plugger interface {
 	Handle(Conn)
 }
 
+// HandleFunc handle function to process request
+type HandleFunc func(Conn)
+
+// Plug implement Plugger.Plug
+func (f HandleFunc) Plug(Plugger) Plugger {
+	return f
+}
+
+// Handle implement Plugger.Handle
+func (f HandleFunc) Handle(conn Conn) {
+	f(conn)
+}
+
 type handler struct {
 	h http.Handler
 }
