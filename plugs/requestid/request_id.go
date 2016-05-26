@@ -13,17 +13,18 @@ type requestIDPlug struct {
 	httpHeader string
 }
 
-func newPlug(headers ...string) *requestIDPlug {
-	header := DefaultHTTPHeader
-	if len(headers) > 0 {
-		header = headers[0]
-	}
+func newPlug(header string) *requestIDPlug {
 	return &requestIDPlug{httpHeader: header}
 }
 
 // New create a new request id Plugger
-func New(headers ...string) plug.Plugger {
-	return newPlug(headers...)
+func New() plug.Plugger {
+	return NewWithHeader(DefaultHTTPHeader)
+}
+
+// NewWithHeader create a new request id Plugger with customized http header
+func NewWithHeader(header string) plug.Plugger {
+	return newPlug(header)
 }
 
 func (p *requestIDPlug) Plug(next plug.Plugger) plug.Plugger {

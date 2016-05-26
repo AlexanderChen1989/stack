@@ -10,7 +10,7 @@ import (
 )
 
 func TestAddRequestID(t *testing.T) {
-	p := newPlug()
+	p := newPlug(DefaultHTTPHeader)
 	p.next = plug.NewEmpty()
 	assert.Equal(t, p.httpHeader, DefaultHTTPHeader)
 	req, _ := http.NewRequest("", "", nil)

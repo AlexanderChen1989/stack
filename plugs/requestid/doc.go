@@ -8,25 +8,18 @@ If a request id already exists as the "x-request-id" HTTP request header,
 then that value will be used assuming it is between 20 and 200 characters.
 If it is not, a new request id will be generated.
 
-The request id is added to the Logger metadata as `:request_id` and the response as
-the "x-request-id" HTTP header. To see the request id in your log output,
-configure your logger backends to include the `:request_id` metadata:
-
-    config :logger, :console, metadata: [:request_id]
-
-It is recommended to include this metadata configuration in your production
-configuration file.
 
 To use it, just plug it into the desired module:
 
-    plug Plug.RequestId
+  b := plug.NewBuilder()
+
+  b.Plug(requestid.New())
 
 ## Options
 
-  * `:http_header` - The name of the HTTP *request* header to check for
+  * `http_header` - The name of the HTTP *request* header to check for
   existing request ids. This is also the HTTP *response* header that will be
   set with the request id. Default value is "x-request-id"
 
-      plug Plug.RequestId, http_header: "custom-request-id"
-
+  b.Plug(requestid.NewWithHeader("custom-request-id"))
 */
