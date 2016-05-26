@@ -18,7 +18,7 @@
   * Logger
   * MethodOverride
   * Parsers
-  * [ ] RequestId
+  * [x] RequestId
   * Router
   * SSL
   * Session
