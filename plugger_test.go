@@ -9,14 +9,16 @@ type helloPlugger struct {
 	next Plugger
 }
 
+//Plug implements PluggerPlug
 func (hello *helloPlugger) Plug(p Plugger) Plugger {
 	hello.next = p
 	return hello
 }
 
-func (p *helloPlugger) Handle(conn Conn) {
+// Handle implements Plugger.Handle
+func (hello *helloPlugger) Handle(conn Conn) {
 	fmt.Println("Hello")
-	p.next.Handle(conn)
+	hello.next.Handle(conn)
 }
 
 func TestBuilder(t *testing.T) {
