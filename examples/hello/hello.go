@@ -12,6 +12,7 @@ func main() {
 	b := plug.NewBuilder()
 
 	b.Plug(requestid.New())
+	b.Plug(requestid.NewWithHeader("My-Request-ID"))
 
 	b.Plug(plug.HandleFunc(func(conn plug.Conn) {
 		fmt.Fprintln(conn, "Hello, world!")
