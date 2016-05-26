@@ -12,6 +12,17 @@
   * SSL
   * Session
   * Static
+* [ ] 添加Plugger
+  * CSRFProtection
+  * Head
+  * Logger
+  * MethodOverride
+  * Parsers
+  * [ ] RequestId
+  * Router
+  * SSL
+  * Session
+  * Static
 * [ ] elixir-lang/plug模块
   * Adapters
   * Builder
