@@ -11,6 +11,7 @@ import (
 	"path"
 	"regexp"
 
+	"github.com/AlexanderChen1989/plug"
 	"github.com/gorilla/context"
 	xcontext "golang.org/x/net/context"
 )
@@ -326,6 +327,14 @@ const (
 // Vars returns the route variables for the current request, if any.
 func Vars(r *http.Request) map[string]string {
 	if rv := context.Get(r, varsKey); rv != nil {
+		return rv.(map[string]string)
+	}
+	return nil
+}
+
+// ConnVars returns the route variables for the current request, if any.
+func ConnVars(conn plug.Conn) map[string]string {
+	if rv := context.Get(conn.Request, varsKey); rv != nil {
 		return rv.(map[string]string)
 	}
 	return nil
