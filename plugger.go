@@ -7,7 +7,7 @@ import "net/http"
 // This pipeline can process request layer by layer
 type Plugger interface {
 	Plug(Plugger) Plugger
-	Handle(Conn)
+	HandleConn(Conn)
 }
 
 // HandleFunc handle function to process request
@@ -18,8 +18,8 @@ func (f HandleFunc) Plug(Plugger) Plugger {
 	return f
 }
 
-// Handle implement Plugger.Handle
-func (f HandleFunc) Handle(conn Conn) {
+// HandleConn implement Plugger.HandleConn
+func (f HandleFunc) HandleConn(conn Conn) {
 	f(conn)
 }
 
@@ -32,8 +32,8 @@ func (h handler) Plug(Plugger) Plugger {
 	return h
 }
 
-// Handle implements Plugger.Handle
-func (h handler) Handle(conn Conn) {
+// HandleConn implements Plugger.HandleConn
+func (h handler) HandleConn(conn Conn) {
 	h.h.ServeHTTP(conn.ResponseWriter, conn.Request)
 }
 

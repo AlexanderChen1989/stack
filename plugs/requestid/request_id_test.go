@@ -20,9 +20,9 @@ func TestAddRequestID(t *testing.T) {
 	}
 	fakeID := randString(32)
 	conn.Request.Header.Add(DefaultHTTPHeader, fakeID)
-	p.Handle(conn)
+	p.HandleConn(conn)
 	assert.Equal(t, conn.ResponseWriter.Header().Get(DefaultHTTPHeader), fakeID)
 	conn.Request.Header.Set(DefaultHTTPHeader, "")
-	p.Handle(conn)
+	p.HandleConn(conn)
 	assert.Len(t, conn.ResponseWriter.Header().Get(DefaultHTTPHeader), 32)
 }

@@ -56,8 +56,8 @@ func (p *requestIDPlug) setRequestID(conn plug.Conn, rid string) plug.Conn {
 	return conn
 }
 
-func (p *requestIDPlug) Handle(conn plug.Conn) {
+func (p *requestIDPlug) HandleConn(conn plug.Conn) {
 	rid := p.getRequestID(conn)
 	conn = p.setRequestID(conn, rid)
-	p.next.Handle(conn)
+	p.next.HandleConn(conn)
 }

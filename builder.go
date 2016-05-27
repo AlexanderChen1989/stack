@@ -44,6 +44,6 @@ func (builder *Builder) BuildHTTPHandler() http.Handler {
 			ResponseWriter: w,
 		}
 
-		builder.Build().Handle(conn)
+		builder.Build().HandleConn(conn)
 	})
 }

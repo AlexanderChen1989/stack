@@ -12,6 +12,6 @@ func (empty emptyPlugger) Plug(Plugger) Plugger {
 	return empty
 }
 
-// Handle implements Plugger.Handle
-func (empty emptyPlugger) Handle(Conn) {
+// HandleConn implements Plugger.HandleConn
+func (empty emptyPlugger) HandleConn(Conn) {
 }

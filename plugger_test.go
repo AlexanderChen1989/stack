@@ -15,10 +15,10 @@ func (hello *helloPlugger) Plug(p Plugger) Plugger {
 	return hello
 }
 
-// Handle implements Plugger.Handle
-func (hello *helloPlugger) Handle(conn Conn) {
+// HandleConn implements Plugger.HandleConn
+func (hello *helloPlugger) HandleConn(conn Conn) {
 	fmt.Println("Hello")
-	hello.next.Handle(conn)
+	hello.next.HandleConn(conn)
 }
 
 func TestBuilder(t *testing.T) {
@@ -26,5 +26,5 @@ func TestBuilder(t *testing.T) {
 
 	b.Plug(&helloPlugger{})
 
-	b.Build().Handle(Conn{})
+	b.Build().HandleConn(Conn{})
 }
