@@ -7,7 +7,7 @@
 
 ## Example
 
-```golang
+```go
 package main
 
 import (
