@@ -3,7 +3,7 @@
 ## What's Plug?
 * Plug is a simple web framework for golang
 * A Plugger is a middleware which can be stacked together
-* Router, Handler... everything is Plugger
+* Router, Handler, stack of Pluggers... everything is Plugger
 
 ## Example
 
