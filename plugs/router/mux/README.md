@@ -221,9 +221,10 @@ import (
 	"net/http"
 	"log"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 )
 
-func YourHandler(w http.ResponseWriter, r *http.Request) {
+func YourHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Gorilla!\n"))
 }
 
