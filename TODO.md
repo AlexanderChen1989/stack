@@ -1,7 +1,5 @@
-# 2016-05-20 14:11
-* [x] 为Conn添加使用Context的接口
-  * 插件可以通过context内的方式直接使用Conn
-* [x] 整理通用的Plugger
+# 2016-05-20 2016-05-30
+* [x] elixir-lang/plug plugs
   * CSRFProtection
   * Head
   * Logger
@@ -12,18 +10,18 @@
   * SSL
   * Session
   * Static
-* [ ] 添加Plugger
+* [ ] port elixir-lang/plug
   * CSRFProtection
   * Head
   * Logger
   * MethodOverride
   * Parsers
   * [x] RequestId
-  * Router
+  * [x] Router
   * SSL
   * Session
   * Static
-* [ ] elixir-lang/plug模块
+* [ ] analyse elixir-lang/plug modules
   * Adapters
   * Builder
   * CSRFProtection
@@ -47,4 +45,3 @@
   * Test
   * Upload
   * UploadError
-* [ ] 整理elixir-lang/plug里面辅助使用的方法
