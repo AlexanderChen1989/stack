@@ -10,16 +10,16 @@ type Plugger interface {
 	HandleConn(Conn)
 }
 
-// HandleFunc handle function to process request
-type HandleFunc func(Conn)
+// HandleConnFunc handle function to process request
+type HandleConnFunc func(Conn)
 
 // Plug implement Plugger.Plug
-func (f HandleFunc) Plug(Plugger) Plugger {
+func (f HandleConnFunc) Plug(Plugger) Plugger {
 	return f
 }
 
 // HandleConn implement Plugger.HandleConn
-func (f HandleFunc) HandleConn(conn Conn) {
+func (f HandleConnFunc) HandleConn(conn Conn) {
 	f(conn)
 }
 
