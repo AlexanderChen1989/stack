@@ -12,7 +12,7 @@
   * Static
 * [ ] port elixir-lang/plug
   * CSRFProtection
-  * Head
+  * [x] Head
   * Logger
   * MethodOverride
   * Parsers
