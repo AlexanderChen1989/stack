@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/AlexanderChen1989/plug"
+	"github.com/AlexanderChen1989/plug/plugs/log/gplog"
 	"github.com/AlexanderChen1989/plug/plugs/requestid"
 	"github.com/AlexanderChen1989/plug/plugs/router/mux"
 )
@@ -12,8 +13,10 @@ import (
 func main() {
 	b := plug.NewBuilder()
 
-	b.Plug(requestid.New())
+	b.Plug(gplog.New())
+	b.Plug(gplog.NewTrace())
 
+	b.Plug(requestid.New())
 	router := mux.NewRouter()
 
 	router.DispatchFunc(
