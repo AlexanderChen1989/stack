@@ -14,6 +14,7 @@ func main() {
 	b := plug.NewBuilder()
 
 	b.Plug(gplog.New())
+	// b.Plug(gplog.New(gplog.Error())
 	b.Plug(gplog.NewTrace())
 
 	b.Plug(requestid.New())
@@ -22,6 +23,8 @@ func main() {
 	router.DispatchFunc(
 		"/hello",
 		func(conn plug.Conn) {
+			logger := gplog.Logger(conn)
+			logger.Info("Success!")
 			fmt.Fprintln(conn, "Hello, world!")
 		},
 	)
