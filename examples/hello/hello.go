@@ -14,7 +14,16 @@ func main() {
 	b := plug.NewBuilder()
 
 	b.Plug(gplog.New())
-	// b.Plug(gplog.New(gplog.Error())
+
+	/*
+		b.Plug(
+			gplog.New(
+				gplog.Debug(), // log level
+				gplog.LogHandler(console.New()), // log backend
+			),
+		)
+	*/
+
 	b.Plug(gplog.NewTrace())
 
 	b.Plug(requestid.New())
