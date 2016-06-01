@@ -13,7 +13,7 @@
 * [ ] port elixir-lang/plug
   * CSRFProtection
   * [x] Head
-  * Logger
+  * [x] Logger
   * MethodOverride
   * Parsers
   * [x] RequestId
@@ -21,6 +21,7 @@
   * SSL
   * Session
   * Static
+    * [ ] analys elixir-lang/plug static plug behaviours
 * [ ] analyse elixir-lang/plug modules
   * Adapters
   * Builder
