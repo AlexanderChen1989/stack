@@ -127,7 +127,9 @@ func (l *logPlug) HandleConn(conn plug.Conn) {
 
 // Logger return inject logger instance, you have to add log plug first
 func Logger(conn plug.Conn) log.FieldLeveledLogger {
-	l, _ := conn.Value(&logKey).(log.FieldLeveledLogger)
-
+	l, ok := conn.Value(&logKey).(log.FieldLeveledLogger)
+	if !ok {
+		return nil
+	}
 	return l
 }
