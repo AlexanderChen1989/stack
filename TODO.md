@@ -1,4 +1,5 @@
-# 2016-05-20 2016-05-30
+# 2016-05-20 2016-05-30 2016-07-01
+* [ ] move plugs to go1.7
 * [x] elixir-lang/plug plugs
   * CSRFProtection
   * Head
