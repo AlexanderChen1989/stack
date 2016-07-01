@@ -1,10 +1,6 @@
 package plug
 
-import (
-	"net/http"
-
-	"golang.org/x/net/context"
-)
+import "net/http"
 
 // Builder build pipeline of Pluggers
 type Builder struct {
@@ -39,7 +35,7 @@ func (builder *Builder) Build() Plugger {
 func (builder *Builder) BuildHTTPHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		conn := Conn{
-			Context:        context.Background(),
+			Context:        r.Context(),
 			Request:        r,
 			ResponseWriter: w,
 		}
