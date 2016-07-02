@@ -6,11 +6,11 @@ import (
 	"testing"
 )
 
-type M struct {
+type P struct {
 	name string
 }
 
-func (m *M) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func (m *P) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	next(nil, nil)
 }
 
@@ -45,7 +45,7 @@ func BenchmarkPlug(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {
-		builder.Plug(&M{})
+		builder.Plug(&P{})
 	}
 
 	h := builder.Build()
