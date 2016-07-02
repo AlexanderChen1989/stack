@@ -19,7 +19,6 @@ func (p *pipe) buildNexts() {
 	}
 
 	plugs := p.plugs
-
 	nexts := []http.HandlerFunc{
 		func(w http.ResponseWriter, r *http.Request) {},
 	}
@@ -29,7 +28,6 @@ func (p *pipe) buildNexts() {
 		next := func(w http.ResponseWriter, r *http.Request) {
 			p.plugs[index](w, r, p.nexts[index])
 		}
-
 		nexts = append([]http.HandlerFunc{next}, nexts...)
 	}
 
