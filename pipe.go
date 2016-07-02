@@ -11,8 +11,6 @@ func newPipe(plugs ...func(http.ResponseWriter, *http.Request, func(http.Respons
 	return &pipe{plugs: plugs}
 }
 
-func emptyPlug(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request)) {}
-
 func (p *pipe) build() {
 	if len(p.plugs) == 0 {
 		panic("No plug")
