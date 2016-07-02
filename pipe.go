@@ -25,25 +25,20 @@ func (p *pipe) build() {
 	}
 
 	for i := len(plugs) - 2; i >= 0; i-- {
-		rest := plugs[i+1:]
+		plugFn, index := plugs[i+1], i+1
+
 		next := func(w http.ResponseWriter, r *http.Request) {
-			p.next(w, r, rest)
+			plugFn(w, r, p.nexts[index])
 		}
+
 		head := []func(w http.ResponseWriter, r *http.Request){next}
+
 		nexts = append(head, nexts...)
 	}
 
 	p.nexts = nexts
 }
 
-func (p *pipe) next(w http.ResponseWriter, r *http.Request,
-	plugs []func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))) {
-
-	nexts := p.nexts
-
-	plugs[0](w, r, nexts[len(nexts)-len(plugs)])
-}
-
 func (p *pipe) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.next(w, r, p.plugs)
+	p.plugs[0](w, r, p.nexts[0])
 }
