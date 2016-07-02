@@ -2,8 +2,6 @@ package plug
 
 import "net/http"
 
-type PlugFunc func(http.ResponseWriter, *http.Request, http.HandlerFunc)
-
 type pipe struct {
 	plugs []PlugFunc
 	nexts []http.HandlerFunc

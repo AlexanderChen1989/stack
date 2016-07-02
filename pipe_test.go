@@ -3,9 +3,16 @@ package plug
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"testing"
 )
+
+type M struct {
+	name string
+}
+
+func (m *M) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	next(nil, nil)
+}
 
 func mgen(name string) PlugFunc {
 	if name != "" {
@@ -20,22 +27,25 @@ func mgen(name string) PlugFunc {
 	}
 }
 
-func TestNext(t *testing.T) {
+func BenchmarkPlugFunc(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {
-		name := strconv.Itoa(i)
-		builder.Plug(mgen(name))
+		builder.PlugFunc(mgen(""))
 	}
 
-	builder.Build().ServeHTTP(nil, nil)
+	h := builder.Build()
+
+	for i := 0; i < b.N; i++ {
+		h.ServeHTTP(nil, nil)
+	}
 }
 
-func BenchmarkNext(b *testing.B) {
+func BenchmarkPlug(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {
-		builder.Plug(mgen(""))
+		builder.Plug(&M{})
 	}
 
 	h := builder.Build()

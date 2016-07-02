@@ -10,7 +10,13 @@ type Builder struct {
 	plugs []PlugFunc
 }
 
-func (b *Builder) Plug(plugs ...PlugFunc) {
+func (b *Builder) Plug(plugs ...Plug) {
+	for _, p := range plugs {
+		b.plugs = append(b.plugs, p.ServeHTTP)
+	}
+}
+
+func (b *Builder) PlugFunc(plugs ...PlugFunc) {
 	b.plugs = append(b.plugs, plugs...)
 }
 
