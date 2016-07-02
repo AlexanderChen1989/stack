@@ -3,6 +3,7 @@ package plug
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"testing"
 )
 
@@ -25,6 +26,16 @@ func mgen(name string) PlugFunc {
 	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		next(nil, nil)
 	}
+}
+
+func TestPlugFunc(t *testing.T) {
+	builder := NewBuilder()
+
+	for i := 0; i < 10; i++ {
+		builder.PlugFunc(mgen(strconv.Itoa(i)))
+	}
+
+	builder.Build().ServeHTTP(nil, nil)
 }
 
 func BenchmarkPlugFunc(b *testing.B) {
