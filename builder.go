@@ -15,7 +15,5 @@ func (b *Builder) Plug(plugs ...func(http.ResponseWriter, *http.Request, func(ht
 }
 
 func (b *Builder) Build() http.Handler {
-	pipe := newPipe(b.plugs...)
-	pipe.build()
-	return pipe
+	return newPipe(b.plugs...)
 }

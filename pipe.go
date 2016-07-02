@@ -8,10 +8,12 @@ type pipe struct {
 }
 
 func newPipe(plugs ...func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))) *pipe {
-	return &pipe{plugs: plugs}
+	pipe := &pipe{plugs: plugs}
+	pipe.buildNexts()
+	return pipe
 }
 
-func (p *pipe) build() {
+func (p *pipe) buildNexts() {
 	if len(p.plugs) == 0 {
 		panic("No plug")
 	}
