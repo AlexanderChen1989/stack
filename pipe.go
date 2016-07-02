@@ -2,12 +2,14 @@ package plug
 
 import "net/http"
 
+type PlugFunc func(http.ResponseWriter, *http.Request, http.HandlerFunc)
+
 type pipe struct {
-	plugs []func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))
-	nexts []func(http.ResponseWriter, *http.Request)
+	plugs []PlugFunc
+	nexts []http.HandlerFunc
 }
 
-func newPipe(plugs ...func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))) *pipe {
+func newPipe(plugs ...PlugFunc) *pipe {
 	pipe := &pipe{plugs: plugs}
 	pipe.buildNexts()
 	return pipe
@@ -20,20 +22,17 @@ func (p *pipe) buildNexts() {
 
 	plugs := p.plugs
 
-	nexts := []func(http.ResponseWriter, *http.Request){
+	nexts := []http.HandlerFunc{
 		func(w http.ResponseWriter, r *http.Request) {},
 	}
 
 	for i := len(plugs) - 2; i >= 0; i-- {
-		plugFn, index := plugs[i+1], i+1
-
+		index := i + 1
 		next := func(w http.ResponseWriter, r *http.Request) {
-			plugFn(w, r, p.nexts[index])
+			p.plugs[index](w, r, p.nexts[index])
 		}
 
-		head := []func(w http.ResponseWriter, r *http.Request){next}
-
-		nexts = append(head, nexts...)
+		nexts = append([]http.HandlerFunc{next}, nexts...)
 	}
 
 	p.nexts = nexts

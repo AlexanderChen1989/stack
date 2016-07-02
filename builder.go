@@ -7,10 +7,10 @@ func NewBuilder() *Builder {
 }
 
 type Builder struct {
-	plugs []func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))
+	plugs []PlugFunc
 }
 
-func (b *Builder) Plug(plugs ...func(http.ResponseWriter, *http.Request, func(http.ResponseWriter, *http.Request))) {
+func (b *Builder) Plug(plugs ...PlugFunc) {
 	b.plugs = append(b.plugs, plugs...)
 }
 

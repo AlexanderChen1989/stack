@@ -7,15 +7,15 @@ import (
 	"testing"
 )
 
-func mgen(name string) func(w http.ResponseWriter, r *http.Request, next func(http.ResponseWriter, *http.Request)) {
+func mgen(name string) PlugFunc {
 	if name != "" {
-		return func(w http.ResponseWriter, r *http.Request, next func(http.ResponseWriter, *http.Request)) {
+		return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 			fmt.Println(name)
 			next(nil, nil)
 		}
 	}
 
-	return func(w http.ResponseWriter, r *http.Request, next func(http.ResponseWriter, *http.Request)) {
+	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		next(nil, nil)
 	}
 }
