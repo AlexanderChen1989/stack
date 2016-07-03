@@ -43,7 +43,7 @@ func main() {
 * 10 Plug
 
 ```sh
-➜  plug git:(go1.7) go test -run=XXX  -bench=.  -benchmem -v -benchtime=3s
+➜  go test -run=XXX  -bench=.  -benchmem -v -benchtime=3s
 BenchmarkPlugFunc-4   	50000000	        75.8 ns/op	       0 B/op	       0 allocs/op
 BenchmarkPlug-4       	50000000	       101 ns/op	       0 B/op	       0 allocs/op
 PASS
