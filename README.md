@@ -56,27 +56,27 @@ ok  	github.com/AlexanderChen1989/plug	9.077s
                     +
                     |
                +---------+
-               | Plugger |
+               | Plug    |
                +---------+
                     |
                +---------+
-               | Plugger |
+               | Plug    |
                +---------+
                     |
             +----------------+
-         +--+ Router(Plugger)+--+
+         +--+ Router(Plug   )+--+
          |  +----------------+  |
          |                      |
          |                      |
          |                      v
          v                 +---------+
-     +---------+           | Plugger |
-     | Plugger |           +---------+
+     +---------+           | Plug    |
+     | Plug    |           +---------+
      +---------+           +---------+
-          |                | Plugger |
+          |                | Plug    |
  +-----------------+       +---------+
- | Handler(Plugger)|            |
+ | Handler(Plug   )|            |
  +-----------------+   +-----------------+
-                       | Handler(Plugger)|
+                       | Handler(Plug   )|
                        +-----------------+
 ```
