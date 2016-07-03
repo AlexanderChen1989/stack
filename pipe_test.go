@@ -49,6 +49,7 @@ func TestPlugFunc(t *testing.T) {
 	builder.Build().ServeHTTP(nil, r)
 }
 
+// BenchmarkPlugFunc for 10 plugs
 func BenchmarkPlugFunc(b *testing.B) {
 	builder := NewBuilder()
 
@@ -63,6 +64,7 @@ func BenchmarkPlugFunc(b *testing.B) {
 	}
 }
 
+// BenchmarkPlug for 10 plugs
 func BenchmarkPlug(b *testing.B) {
 	builder := NewBuilder()
 
