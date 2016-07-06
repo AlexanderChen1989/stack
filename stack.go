@@ -18,17 +18,26 @@ func (s *stack) buildNexts() {
 		panic("No frame")
 	}
 
-	frames := s.frames
-	nexts := []http.HandlerFunc{
-		func(w http.ResponseWriter, r *http.Request) {},
-	}
+	nexts := []http.HandlerFunc{}
+	last := len(s.frames) - 1
 
-	for i := len(frames) - 2; i >= 0; i-- {
-		index := i + 1
-		next := func(w http.ResponseWriter, r *http.Request) {
-			s.frames[index](w, r, s.nexts[index])
+	for i := 0; i <= last; i++ {
+		// last frame has no next
+		if i >= last {
+			nexts = append(
+				nexts,
+				func(w http.ResponseWriter, r *http.Request) {},
+			)
+			break
 		}
-		nexts = append([]http.HandlerFunc{next}, nexts...)
+
+		nextIndex := i + 1
+		nexts = append(
+			nexts,
+			func(w http.ResponseWriter, r *http.Request) {
+				s.frames[nextIndex](w, r, s.nexts[nextIndex])
+			},
+		)
 	}
 
 	s.nexts = nexts
