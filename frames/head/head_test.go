@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/AlexanderChen1989/plug"
+	"github.com/AlexanderChen1989/stack"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,9 +27,9 @@ func TestHeadPlugger(t *testing.T) {
 			assert.Equal(t, r.Method, c.expected)
 		}
 
-		b := plug.NewBuilder()
-		b.PlugFunc(PlugFunc)
-		b.PlugFunc(checkFn)
+		b := stack.NewBuilder()
+		b.PushFunc(FrameFunc)
+		b.PushFunc(checkFn)
 
 		b.Build().ServeHTTP(nil, req)
 	}
