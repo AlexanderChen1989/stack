@@ -1,17 +1,19 @@
-package rmux
+package mux
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	rmux "github.com/gorilla/mux"
+
 	"github.com/AlexanderChen1989/plug"
-	"github.com/gorilla/mux"
+	"github.com/AlexanderChen1989/plug/plugs/router"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMux(t *testing.T) {
-	router := mux.NewRouter()
+	r := rmux.NewRouter()
 
 	genHandle := func(path string) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
@@ -25,11 +27,11 @@ func TestMux(t *testing.T) {
 		"/hello/world",
 	}
 	for _, path := range paths {
-		router.HandleFunc(path, genHandle(path))
+		r.HandleFunc(path, genHandle(path))
 	}
 
 	b := plug.NewBuilder()
-	b.PlugFunc(New(router))
+	b.PlugFunc(router.New(r))
 
 	server := httptest.NewServer(b.Build())
 

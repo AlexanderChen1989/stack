@@ -1,17 +1,17 @@
-package rmux
+package router
 
 import (
 	"net/http"
 
 	"github.com/AlexanderChen1989/plug"
-	m "github.com/gorilla/mux"
 )
 
-// New create a new Plug for *mux.Router
-func New(router *m.Router) plug.PlugFunc {
+// New create a new Plug for router
+func New(router http.Handler) plug.PlugFunc {
 	if router == nil {
 		panic("Router is nil")
 	}
+
 	return func(w http.ResponseWriter, r *http.Request, _ http.HandlerFunc) {
 		router.ServeHTTP(w, r)
 	}
