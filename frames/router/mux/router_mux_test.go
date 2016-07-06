@@ -7,8 +7,8 @@ import (
 
 	rmux "github.com/gorilla/mux"
 
-	"github.com/AlexanderChen1989/plug"
-	"github.com/AlexanderChen1989/plug/plugs/router"
+	"github.com/AlexanderChen1989/stack"
+	"github.com/AlexanderChen1989/stack/frames/router"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,8 +30,8 @@ func TestMux(t *testing.T) {
 		r.HandleFunc(path, genHandle(path))
 	}
 
-	b := plug.NewBuilder()
-	b.PlugFunc(router.New(r))
+	b := stack.NewBuilder()
+	b.PushFunc(router.New(r))
 
 	server := httptest.NewServer(b.Build())
 
