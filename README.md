@@ -43,10 +43,10 @@ func main() {
 
 ```sh
 ➜  go test -run=XXX  -bench=.  -benchmem -v -benchtime=3s
-BenchmarkStackFunc-4   	50000000	        75.8 ns/op	       0 B/op	       0 allocs/op
-BenchmarkStack-4       	50000000	       101 ns/op	       0 B/op	       0 allocs/op
+BenchmarkFrameFunc-4   	50000000	        76.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkFrame-4       	50000000	       102 ns/op	       0 B/op	       0 allocs/op
 PASS
-ok  	github.com/AlexanderChen1989/frame	9.077s
+ok  	github.com/AlexanderChen1989/stack	9.162s
 ```
 
 ## Stack Architecture
