@@ -3,7 +3,7 @@ package requestid
 import (
 	"net/http"
 
-	"github.com/AlexanderChen1989/plug"
+	"github.com/AlexanderChen1989/stack"
 )
 
 const (
@@ -11,8 +11,8 @@ const (
 	DefaultHTTPHeader = "x-request-id"
 )
 
-// New create a new request id Plug with customized http header
-func New(header string) plug.PlugFunc {
+// New create a new request id Frame with customized http header
+func New(header string) stack.FrameFunc {
 	if header == "" {
 		header = DefaultHTTPHeader
 	}
