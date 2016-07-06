@@ -1,24 +1,23 @@
 package gplog
 
 import (
+	"net/http"
 	"testing"
-
-	"golang.org/x/net/context"
 
 	"github.com/AlexanderChen1989/plug"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestLogPlug(t *testing.T) {
-	b := plug.NewBuilder()
-	b.Plug(New())
-	b.Plug(plug.HandleConnFunc(func(conn plug.Conn) {
-		logger := Logger(conn)
+	checkFn := func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		logger := Logger(r)
 		assert.NotNil(t, logger)
-		logger.Alert("nice", "Hello, world!")
-		logger.Info("nice", "Hello, world!")
-	}))
-	b.Build().HandleConn(plug.Conn{
-		Context: context.Background(),
-	})
+		logger.Alert("[Nice] ", "Hello, world!")
+		logger.Info("[Nice] ", "Hello, world!")
+	}
+	b := plug.NewBuilder()
+	b.PlugFunc(New())
+	b.PlugFunc(checkFn)
+	r, _ := http.NewRequest("GET", "/", nil)
+	b.Build().ServeHTTP(nil, r)
 }

@@ -2,18 +2,16 @@
 package gplog
 
 import (
+	"context"
+	"net/http"
+
 	"github.com/AlexanderChen1989/plug"
 	"github.com/go-playground/log"
 	"github.com/go-playground/log/handlers/console"
 )
 
-type logPlug struct {
-	log.FieldLeveledLogger
-	next plug.Plugger
-}
-
-// Config config logger plugger
-type Config struct {
+// config config logger plugger
+type config struct {
 	Levels     []log.Level
 	LogHandler log.Handler
 }
@@ -32,19 +30,23 @@ func (empty EmptyHandler) Run() chan<- *log.Entry {
 	return ch
 }
 
-// NewWitConfig create log plugger with config,
+// newWitConfig create log plug with config,
 // if config.Backand is nil, console handler will be used
-func NewWitConfig(cfg Config) plug.Plugger {
+func newWitConfig(cfg config) plug.PlugFunc {
 	if cfg.LogHandler == nil {
 		cfg.LogHandler = console.New()
 	}
 	log.RegisterHandler(cfg.LogHandler, cfg.Levels...)
-	return &logPlug{FieldLeveledLogger: log.Logger}
+
+	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		ctx := context.WithValue(r.Context(), &logKey, log.Logger)
+		next(w, r.WithContext(ctx))
+	}
 }
 
-// New create new log plugger
-func New(fns ...func(Config) Config) plug.Plugger {
-	cfg := Config{
+// New create new log Plug
+func New(fns ...func(config) config) plug.PlugFunc {
+	cfg := config{
 		Levels: log.AllLevels,
 	}
 	for _, fn := range fns {
@@ -53,7 +55,7 @@ func New(fns ...func(Config) Config) plug.Plugger {
 	if cfg.LogHandler == nil {
 		cfg.LogHandler = console.New()
 	}
-	return NewWitConfig(cfg)
+	return newWitConfig(cfg)
 }
 
 var allLevels = []log.Level{
@@ -69,27 +71,27 @@ var allLevels = []log.Level{
 }
 
 // Info log info level
-func Info() func(Config) Config {
+func Info() func(config) config {
 	return Level(log.InfoLevel)
 }
 
 // Debug log debug level
-func Debug() func(Config) Config {
+func Debug() func(config) config {
 	return Level(log.DebugLevel)
 }
 
 // Warn log warn level
-func Warn() func(Config) Config {
+func Warn() func(config) config {
 	return Level(log.WarnLevel)
 }
 
 // Error log error level
-func Error() func(Config) Config {
+func Error() func(config) config {
 	return Level(log.ErrorLevel)
 }
 
 // Level config log level
-func Level(l log.Level) func(Config) Config {
+func Level(l log.Level) func(config) config {
 	var ls []log.Level
 	for i, level := range allLevels {
 		if level == l {
@@ -98,36 +100,25 @@ func Level(l log.Level) func(Config) Config {
 		}
 	}
 
-	return func(cfg Config) Config {
+	return func(cfg config) config {
 		cfg.Levels = ls
 		return cfg
 	}
 }
 
 // LogHandler config log handler
-func LogHandler(h log.Handler) func(Config) Config {
-	return func(cfg Config) Config {
+func LogHandler(h log.Handler) func(config) config {
+	return func(cfg config) config {
 		cfg.LogHandler = h
 		return cfg
 	}
 }
 
-func (l *logPlug) Plug(next plug.Plugger) plug.Plugger {
-	l.next = next
-	return l
-}
-
 var logKey int
 
-func (l *logPlug) HandleConn(conn plug.Conn) {
-	conn = plug.WithValue(conn, &logKey, l)
-
-	l.next.HandleConn(conn)
-}
-
 // Logger return inject logger instance, you have to add log plug first
-func Logger(conn plug.Conn) log.FieldLeveledLogger {
-	l, ok := conn.Value(&logKey).(log.FieldLeveledLogger)
+func Logger(r *http.Request) log.FieldLeveledLogger {
+	l, ok := r.Context().Value(&logKey).(log.FieldLeveledLogger)
 	if !ok {
 		return nil
 	}
