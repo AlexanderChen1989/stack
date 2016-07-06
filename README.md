@@ -1,9 +1,9 @@
-# Plug
+#Stack
 
-## What's Plug?
-* Plug is a simple web framework for golang
-* A Plugger is a middleware which can be stacked together
-* Router, Handler, stack of Pluggers... everything is Plugger
+## What's Stack?
+* Stack is a simple web framework for golang
+* A Frame is a middleware which can be stacked together
+* Router, Handler, stack of Frames... everything is Frame
 
 ## Example
 
@@ -22,7 +22,7 @@ import (
 func main() {
 	b := plug.NewBuilder()
 
-	b.Plug(requestid.New())
+	b.Stack(requestid.New())
 
 	router := mux.NewRouter()
 
@@ -33,50 +33,50 @@ func main() {
 		},
 	)
 
-	b.Plug(router)
+	b.Stack(router)
 
 	http.ListenAndServe(":8080", b.BuildHTTPHandler())
 }
 ```
 
 ## Benchmark
-* 10 Frame 
+* 10 Frame
 
 ```sh
 ➜  go test -run=XXX  -bench=.  -benchmem -v -benchtime=3s
-BenchmarkPlugFunc-4   	50000000	        75.8 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPlug-4       	50000000	       101 ns/op	       0 B/op	       0 allocs/op
+BenchmarkStackFunc-4   	50000000	        75.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkStack-4       	50000000	       101 ns/op	       0 B/op	       0 allocs/op
 PASS
-ok  	github.com/AlexanderChen1989/plug	9.077s
+ok  	github.com/AlexanderChen1989/frame	9.077s
 ```
 
-## Plug Architecture
+## Stack Architecture
 ```
                  request
                     +
                     |
                +---------+
-               | Plug    |
+               |  Frame  |
                +---------+
                     |
                +---------+
-               | Plug    |
+               |  Frame  |
                +---------+
                     |
             +----------------+
-         +--+ Router(Plug   )+--+
+         +--+  Router(Frame) +--+
          |  +----------------+  |
          |                      |
          |                      |
          |                      v
          v                 +---------+
-     +---------+           | Plug    |
-     | Plug    |           +---------+
+     +---------+           |  Frame  |
+     |  Frame  |           +---------+
      +---------+           +---------+
-          |                | Plug    |
+          |                |  Frame  |
  +-----------------+       +---------+
- | Handler(Plug   )|            |
+ |  Handler(Frame) |            |
  +-----------------+   +-----------------+
-                       | Handler(Plug   )|
+                       |  Handler(Frame) |
                        +-----------------+
 ```

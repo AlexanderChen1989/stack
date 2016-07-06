@@ -15,7 +15,7 @@ func newStack(frames ...FrameFunc) *stack {
 
 func (s *stack) buildNexts() {
 	if len(s.frames) == 0 {
-		panic("No plug")
+		panic("No frame")
 	}
 
 	frames := s.frames
