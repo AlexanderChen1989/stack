@@ -13,6 +13,7 @@ func newStack(frames ...FrameFunc) *stack {
 	return pipe
 }
 
+// build build nexts for frames
 func (s *stack) build() {
 	if len(s.frames) == 0 {
 		panic("No frame")
