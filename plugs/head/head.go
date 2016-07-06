@@ -3,34 +3,19 @@
 ## Examples
 
   b := plug.NewBuilder()
-  b.Plug(head.New())
+  b.Plug(head.PlugFunc)
 */
 package head
 
 import (
 	"net/http"
 	"strings"
-
-	"github.com/AlexanderChen1989/plug"
 )
 
-type headPlug struct {
-	next plug.Plugger
-}
-
-// New create head Plugger
-func New() plug.Plugger {
-	return &headPlug{}
-}
-
-func (p *headPlug) Plug(next plug.Plugger) plug.Plugger {
-	p.next = next
-	return p
-}
-
-func (p *headPlug) HandleConn(conn plug.Conn) {
-	if strings.ToUpper(conn.Request.Method) == http.MethodHead {
-		conn.Request.Method = http.MethodGet
+func PlugFunc(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	if strings.ToUpper(r.Method) == http.MethodHead {
+		r.Method = http.MethodGet
 	}
-	p.next.HandleConn(conn)
+
+	next(w, r)
 }

@@ -23,11 +23,14 @@ func TestHeadPlugger(t *testing.T) {
 	for _, c := range testCases {
 		req, _ := http.NewRequest(c.method, "/", nil)
 
+		checkFn := func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+			assert.Equal(t, r.Method, c.expected)
+		}
+
 		b := plug.NewBuilder()
-		b.Plug(New())
-		b.Plug(plug.HandleConnFunc(func(conn plug.Conn) {
-			assert.Equal(t, conn.Request.Method, c.expected)
-		}))
-		b.BuildHTTPHandler().ServeHTTP(nil, req)
+		b.PlugFunc(PlugFunc)
+		b.PlugFunc(checkFn)
+
+		b.Build().ServeHTTP(nil, req)
 	}
 }
