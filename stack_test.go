@@ -37,7 +37,7 @@ func mgen2(t *testing.T, id int) FrameFunc {
 	}
 }
 
-func TestPlugFunc(t *testing.T) {
+func TestFrameFunc(t *testing.T) {
 	builder := NewBuilder()
 
 	for i := 0; i < 1000; i++ {
@@ -49,8 +49,8 @@ func TestPlugFunc(t *testing.T) {
 	builder.Build().ServeHTTP(nil, r)
 }
 
-// BenchmarkPlugFunc for 10 plugs
-func BenchmarkPlugFunc(b *testing.B) {
+// BenchmarkFrameFunc for 10 plugs
+func BenchmarkFrameFunc(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {
@@ -64,8 +64,8 @@ func BenchmarkPlugFunc(b *testing.B) {
 	}
 }
 
-// BenchmarkPlug for 10 plugs
-func BenchmarkPlug(b *testing.B) {
+// BenchmarkFrame for 10 plugs
+func BenchmarkFrame(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {

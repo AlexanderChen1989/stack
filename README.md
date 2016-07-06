@@ -40,7 +40,7 @@ func main() {
 ```
 
 ## Benchmark
-* 10 Plug
+* 10 Frame 
 
 ```sh
 ➜  go test -run=XXX  -bench=.  -benchmem -v -benchtime=3s
