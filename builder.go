@@ -1,4 +1,4 @@
-package plug
+package stack
 
 import "net/http"
 
@@ -7,24 +7,24 @@ func NewBuilder() *Builder {
 	return &Builder{}
 }
 
-// Builder is builder for Pipe
+// Builder is builder for Stack
 type Builder struct {
-	plugs []PlugFunc
+	frames []FrameFunc
 }
 
-// Plug plug Plug to Pipe
-func (b *Builder) Plug(plugs ...Plug) {
-	for _, p := range plugs {
-		b.plugs = append(b.plugs, p.ServeHTTP)
+// Push push Frame to Stack
+func (b *Builder) Push(frames ...Frame) {
+	for _, f := range frames {
+		b.frames = append(b.frames, f.ServeHTTP)
 	}
 }
 
-// PlugFunc plug PlugFunc to Pipe
-func (b *Builder) PlugFunc(plugs ...PlugFunc) {
-	b.plugs = append(b.plugs, plugs...)
+// PushFunc push FrameFunc to Stack
+func (b *Builder) PushFunc(frames ...FrameFunc) {
+	b.frames = append(b.frames, frames...)
 }
 
-// Build build Pipe
+// Build build Stack
 func (b *Builder) Build() http.Handler {
-	return newPipe(b.plugs...)
+	return newStack(b.frames...)
 }

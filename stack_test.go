@@ -1,4 +1,4 @@
-package plug
+package stack
 
 import (
 	"context"
@@ -15,13 +15,13 @@ func (m *P) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerF
 	next(nil, nil)
 }
 
-func mgen() PlugFunc {
+func mgen() FrameFunc {
 	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		next(nil, nil)
 	}
 }
 
-func mgen2(t *testing.T, id int) PlugFunc {
+func mgen2(t *testing.T, id int) FrameFunc {
 	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 		for i := 0; i <= id; i++ {
@@ -41,7 +41,7 @@ func TestPlugFunc(t *testing.T) {
 	builder := NewBuilder()
 
 	for i := 0; i < 1000; i++ {
-		builder.PlugFunc(mgen2(t, i))
+		builder.PushFunc(mgen2(t, i))
 	}
 
 	r, _ := http.NewRequest("", "", nil)
@@ -54,7 +54,7 @@ func BenchmarkPlugFunc(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {
-		builder.PlugFunc(mgen())
+		builder.PushFunc(mgen())
 	}
 
 	h := builder.Build()
@@ -69,7 +69,7 @@ func BenchmarkPlug(b *testing.B) {
 	builder := NewBuilder()
 
 	for i := 0; i < 10; i++ {
-		builder.Plug(&P{})
+		builder.Push(&P{})
 	}
 
 	h := builder.Build()
