@@ -1,35 +1,25 @@
 package requestid
 
-import "github.com/AlexanderChen1989/plug"
+import (
+	"net/http"
+
+	"github.com/AlexanderChen1989/plug"
+)
 
 const (
 	// DefaultHTTPHeader default http header for request id
 	DefaultHTTPHeader = "x-request-id"
 )
 
-type requestIDPlug struct {
-	next plug.Plugger
-
-	httpHeader string
-}
-
-func newPlug(header string) *requestIDPlug {
-	return &requestIDPlug{httpHeader: header}
-}
-
-// New create a new request id Plugger
-func New() plug.Plugger {
-	return NewWithHeader(DefaultHTTPHeader)
-}
-
-// NewWithHeader create a new request id Plugger with customized http header
-func NewWithHeader(header string) plug.Plugger {
-	return newPlug(header)
-}
-
-func (p *requestIDPlug) Plug(next plug.Plugger) plug.Plugger {
-	p.next = next
-	return p
+// New create a new request id Plug with customized http header
+func New(header string) plug.PlugFunc {
+	if header == "" {
+		header = DefaultHTTPHeader
+	}
+	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		setRequestID(header, w, getRequestID(header, r))
+		next(w, r)
+	}
 }
 
 func validRequestID(rid string) bool {
@@ -41,8 +31,8 @@ func genRequestID() string {
 	return randString(32)
 }
 
-func (p *requestIDPlug) getRequestID(conn plug.Conn) string {
-	rid := conn.Request.Header.Get(p.httpHeader)
+func getRequestID(header string, r *http.Request) string {
+	rid := r.Header.Get(header)
 
 	if validRequestID(rid) {
 		return rid
@@ -51,13 +41,6 @@ func (p *requestIDPlug) getRequestID(conn plug.Conn) string {
 	return genRequestID()
 }
 
-func (p *requestIDPlug) setRequestID(conn plug.Conn, rid string) plug.Conn {
-	conn.ResponseWriter.Header().Add(p.httpHeader, rid)
-	return conn
-}
-
-func (p *requestIDPlug) HandleConn(conn plug.Conn) {
-	rid := p.getRequestID(conn)
-	conn = p.setRequestID(conn, rid)
-	p.next.HandleConn(conn)
+func setRequestID(header string, w http.ResponseWriter, rid string) {
+	w.Header().Add(header, rid)
 }
