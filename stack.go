@@ -9,11 +9,11 @@ type stack struct {
 
 func newStack(frames ...FrameFunc) *stack {
 	pipe := &stack{frames: frames}
-	pipe.buildNexts()
+	pipe.build()
 	return pipe
 }
 
-func (s *stack) buildNexts() {
+func (s *stack) build() {
 	if len(s.frames) == 0 {
 		panic("No frame")
 	}
