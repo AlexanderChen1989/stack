@@ -14,28 +14,27 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AlexanderChen1989/plug"
-	"github.com/AlexanderChen1989/plug/plugs/requestid"
-	"github.com/AlexanderChen1989/plug/plugs/router/mux"
+	"github.com/gorilla/mux"
+	"github.com/AlexanderChen1989/stack"
+	"github.com/AlexanderChen1989/stack/frames/requestid"
+	"github.com/AlexanderChen1989/stack/frames/router"
 )
 
+func setupRouter() http.Handler {
+	r := mux.NewRouter()
+	r.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, world!\n")
+	})
+	return r
+}
+
 func main() {
-	b := plug.NewBuilder()
+	b := stack.NewBuilder()
 
-	b.Stack(requestid.New())
+	b.PushFunc(requestid.New())
+	b.PushFunc(router.New(setupRouter()))
 
-	router := mux.NewRouter()
-
-	router.DispatchFunc(
-		"/hello",
-		func(conn plug.Conn) {
-			fmt.Fprintln(conn, "Hello, world!")
-		},
-	)
-
-	b.Stack(router)
-
-	http.ListenAndServe(":8080", b.BuildHTTPHandler())
+	http.ListenAndServe(":8080", b.Build())
 }
 ```
 
