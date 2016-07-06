@@ -1,9 +1,9 @@
-/*Package head is a Frame to convert `HEAD` requests to `GET` requests.
+/*Package head is a middleware to convert `HEAD` requests to `GET` requests.
 
 ## Examples
 
   b := plug.NewBuilder()
-  b.Plug(head.FrameFunc)
+  b.PushFunc(head.FrameFunc)
 */
 package head
 
@@ -12,6 +12,7 @@ import (
 	"strings"
 )
 
+// FrameFunc is middleware
 func FrameFunc(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	if strings.ToUpper(r.Method) == http.MethodHead {
 		r.Method = http.MethodGet

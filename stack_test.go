@@ -49,7 +49,7 @@ func TestFrameFunc(t *testing.T) {
 	builder.Build().ServeHTTP(nil, r)
 }
 
-// BenchmarkFrameFunc for 10 plugs
+// BenchmarkFrameFunc for 10 Frames
 func BenchmarkFrameFunc(b *testing.B) {
 	builder := NewBuilder()
 
@@ -64,7 +64,7 @@ func BenchmarkFrameFunc(b *testing.B) {
 	}
 }
 
-// BenchmarkFrame for 10 plugs
+// BenchmarkFrame for 10 Frames
 func BenchmarkFrame(b *testing.B) {
 	builder := NewBuilder()
 

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHeadPlugger(t *testing.T) {
+func TestHeadFrame(t *testing.T) {
 	testCases := []struct {
 		method   string
 		expected string
