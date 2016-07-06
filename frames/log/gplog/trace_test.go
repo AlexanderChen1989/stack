@@ -4,13 +4,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/AlexanderChen1989/plug"
+	"github.com/AlexanderChen1989/stack"
 )
 
 func TestTrance(t *testing.T) {
-	b := plug.NewBuilder()
-	b.PlugFunc(New())
-	b.PlugFunc(Trace)
+	b := stack.NewBuilder()
+	b.PushFunc(New())
+	b.PushFunc(Trace)
 	r, _ := http.NewRequest("GET", "/", nil)
 	b.Build().ServeHTTP(nil, r)
 }

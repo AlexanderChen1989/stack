@@ -5,18 +5,17 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/AlexanderChen1989/plug"
+	"github.com/AlexanderChen1989/stack"
 	"github.com/go-playground/log"
 	"github.com/go-playground/log/handlers/console"
 )
 
-// config config logger plugger
 type config struct {
 	Levels     []log.Level
 	LogHandler log.Handler
 }
 
-// EmptyHandler is handler for logger plug, which will discard all log message
+// EmptyHandler is handler for logger frame, which will discard all log message
 type EmptyHandler struct{}
 
 // Run implements log.Handler
@@ -30,9 +29,9 @@ func (empty EmptyHandler) Run() chan<- *log.Entry {
 	return ch
 }
 
-// newWitConfig create log plug with config,
+// newWitConfig create log Frame with config,
 // if config.Backand is nil, console handler will be used
-func newWitConfig(cfg config) plug.PlugFunc {
+func newWitConfig(cfg config) stack.FrameFunc {
 	if cfg.LogHandler == nil {
 		cfg.LogHandler = console.New()
 	}
@@ -44,8 +43,8 @@ func newWitConfig(cfg config) plug.PlugFunc {
 	}
 }
 
-// New create new log Plug
-func New(fns ...func(config) config) plug.PlugFunc {
+// New create new log Frame
+func New(fns ...func(config) config) stack.FrameFunc {
 	cfg := config{
 		Levels: log.AllLevels,
 	}
@@ -116,7 +115,7 @@ func LogHandler(h log.Handler) func(config) config {
 
 var logKey int
 
-// Logger return inject logger instance, you have to add log plug first
+// Logger return inject logger instance, you have to add log Frame first
 func Logger(r *http.Request) log.FieldLeveledLogger {
 	l, ok := r.Context().Value(&logKey).(log.FieldLeveledLogger)
 	if !ok {

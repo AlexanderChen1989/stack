@@ -4,41 +4,28 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AlexanderChen1989/plug"
-	"github.com/AlexanderChen1989/plug/plugs/log/gplog"
-	"github.com/AlexanderChen1989/plug/plugs/requestid"
-	"github.com/AlexanderChen1989/plug/plugs/router/mux"
+	"github.com/AlexanderChen1989/stack"
+	"github.com/AlexanderChen1989/stack/frames/log/gplog"
+	"github.com/AlexanderChen1989/stack/frames/requestid"
+	"github.com/AlexanderChen1989/stack/frames/router"
+	"github.com/gorilla/mux"
 )
 
+func setupRouter() http.Handler {
+	r := mux.NewRouter()
+	r.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, world!\n")
+	})
+	return r
+}
+
 func main() {
-	b := plug.NewBuilder()
+	b := stack.NewBuilder()
 
-	b.Plug(gplog.New())
+	b.PushFunc(gplog.New())
+	b.PushFunc(gplog.Trace)
+	b.PushFunc(requestid.New(""))
+	b.PushFunc(router.New(setupRouter()))
 
-	/*
-		b.Plug(
-			gplog.New(
-				gplog.Debug(), // log level
-				gplog.LogHandler(console.New()), // log backend
-			),
-		)
-	*/
-
-	b.Plug(gplog.NewTrace())
-
-	b.Plug(requestid.New())
-	router := mux.NewRouter()
-
-	router.DispatchFunc(
-		"/hello",
-		func(conn plug.Conn) {
-			logger := gplog.Logger(conn)
-			logger.Info("Success!")
-			fmt.Fprintln(conn, "Hello, world!")
-		},
-	)
-
-	b.Plug(router)
-
-	http.ListenAndServe(":8080", b.BuildHTTPHandler())
+	http.ListenAndServe(":8080", b.Build())
 }

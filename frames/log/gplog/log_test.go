@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/AlexanderChen1989/plug"
+	"github.com/AlexanderChen1989/stack"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,9 +15,9 @@ func TestLogPlug(t *testing.T) {
 		logger.Alert("[Nice] ", "Hello, world!")
 		logger.Info("[Nice] ", "Hello, world!")
 	}
-	b := plug.NewBuilder()
-	b.PlugFunc(New())
-	b.PlugFunc(checkFn)
+	b := stack.NewBuilder()
+	b.PushFunc(New())
+	b.PushFunc(checkFn)
 	r, _ := http.NewRequest("GET", "/", nil)
 	b.Build().ServeHTTP(nil, r)
 }
