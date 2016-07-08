@@ -1,7 +1,6 @@
 package static
 
 import (
-	"fmt"
 	"net/http"
 	"path"
 	"strings"
@@ -59,31 +58,30 @@ var Default = Static(Config{
 	From: "static",
 })
 
-func allow(conf *Config, r *http.Request) bool {
+func allow(conf *Config, r *http.Request) (string, bool) {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		return "", false
+	}
+
 	if !strings.HasPrefix(r.URL.Path, conf.At) {
-		return false
+		return "", false
 	}
 
 	trimed := r.URL.Path[len(conf.At):]
-	fmt.Println("trimed", trimed)
 
 	for _, onlyMatch := range conf.OnlyMatching {
 		if strings.HasPrefix(trimed, onlyMatch) {
-			return true
+			return trimed, true
 		}
 	}
 
 	for _, only := range conf.Only {
 		if strings.HasPrefix(trimed, only) {
-			return true
+			return trimed, true
 		}
 	}
 
-	return false
-}
-
-func filePath(conf *Config, r *http.Request) (string, error) {
-	return "", nil
+	return "", false
 }
 
 func Static(conf Config) stack.FrameFunc {

@@ -19,20 +19,23 @@ func TestConfig(t *testing.T) {
 	fmt.Println(conf)
 
 	// test allow
-
 	paths := []struct {
 		path    string
+		trimed  string
 		matched bool
 	}{
-		{"/public/images/hello.png", true},
-		{"/public/images-hello.png", false},
-		{"/public/favicon.co", true},
-		{"/public/css-style.css", true},
-		{"/public/css/style.css", true},
+		{"/public/images/hello.png", "/images/hello.png", true},
+		{"/public/images-hello.png", "/images/hello.png", false},
+		{"/public/favicon.co", "/favicon.co", true},
+		{"/public/css-style.css", "/css-style.css", true},
+		{"/public/css/style.css", "/css/style.css", true},
 	}
-
 	for _, p := range paths {
 		r, _ := http.NewRequest("GET", p.path, nil)
-		assert.Equal(t, p.matched, allow(conf, r))
+		trimed, matched := allow(conf, r)
+		assert.Equal(t, p.matched, matched)
+		if p.matched {
+			assert.Equal(t, p.trimed, trimed)
+		}
 	}
 }
