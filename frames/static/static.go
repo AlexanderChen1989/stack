@@ -64,11 +64,13 @@ func allow(conf *Config, r *http.Request) (string, bool) {
 		return "", false
 	}
 
-	if !strings.HasPrefix(r.URL.Path, conf.At) {
+	cleaned := path.Clean(r.URL.Path)
+
+	if !strings.HasPrefix(cleaned, conf.At) {
 		return "", false
 	}
 
-	trimed := r.URL.Path[len(conf.At):]
+	trimed := cleaned[len(conf.At):]
 
 	for _, onlyMatch := range conf.OnlyMatching {
 		if strings.HasPrefix(trimed, onlyMatch) {

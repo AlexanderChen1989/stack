@@ -29,6 +29,8 @@ func TestConfig(t *testing.T) {
 		{"/public/favicon.co", "/favicon.co", true},
 		{"/public/css-style.css", "/css-style.css", true},
 		{"/public/css/style.css", "/css/style.css", true},
+		{"/public/../../css/style.css", "/css/style.css", false},
+		{"/public/css/././style.css", "/css/style.css", true},
 	}
 	for _, p := range paths {
 		r, _ := http.NewRequest("GET", p.path, nil)
