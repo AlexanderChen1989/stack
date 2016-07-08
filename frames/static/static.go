@@ -3,6 +3,7 @@ package static
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 
@@ -16,7 +17,6 @@ type Config struct {
 	Brotli       bool
 	Only         []string
 	OnlyMatching []string
-	Prefix       string
 	CacheVSN     string
 	CacheEtg     string
 	Headers      map[string]string
@@ -87,6 +87,27 @@ func allow(conf *Config, r *http.Request) (string, bool) {
 	return "", false
 }
 
+func fileEncode(conf *Config, file string) (string, os.FileInfo, error) {
+	if conf.Brotli {
+		path := file + ".br"
+		info, err := os.Stat(path)
+		if err == nil {
+			return path, info, nil
+		}
+	}
+
+	if conf.Gzip {
+		path := file + ".gzip"
+		info, err := os.Stat(path)
+		if err == nil {
+			return path, info, nil
+		}
+	}
+
+	info, err := os.Stat(file)
+	return file, info, err
+}
+
 func Static(conf *Config) stack.FrameFunc {
 	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		trimed, allowed := allow(conf, r)
@@ -96,8 +117,13 @@ func Static(conf *Config) stack.FrameFunc {
 			return
 		}
 
-		// serve files
+		file, info, err := fileEncode(conf, path.Join(conf.From, trimed))
+		if err != nil {
+			next(w, r)
+			return
+		}
+		// add cache
 
-		fmt.Println(trimed, allowed)
+		fmt.Println(file, info, err)
 	}
 }

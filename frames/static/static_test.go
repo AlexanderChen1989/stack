@@ -1,7 +1,6 @@
 package static
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -16,7 +15,6 @@ func TestConfig(t *testing.T) {
 		OnlyMatching: []string{"css"},
 	}
 	conf.setup()
-	fmt.Println(conf)
 
 	// test allow
 	paths := []struct {
