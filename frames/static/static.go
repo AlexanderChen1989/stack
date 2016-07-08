@@ -1,7 +1,10 @@
 package static
 
 import (
+	"fmt"
 	"net/http"
+	"path"
+	"strings"
 
 	"github.com/AlexanderChen1989/stack"
 )
@@ -19,14 +22,64 @@ type Config struct {
 	Headers      map[string]string
 }
 
+func (conf *Config) setup() {
+	if conf.At == "" || conf.From == "" {
+		panic("Config.At or Config.From cant be empty")
+	}
+	conf.At = path.Join("/", conf.At)
+	conf.From = path.Join("/", conf.From)
+
+	for i, d := range conf.Only {
+		if strings.ContainsRune(d, '.') {
+			conf.Only[i] = path.Join("/", d)
+			continue
+		}
+		conf.Only[i] = path.Join("/", d) + "/"
+	}
+
+	for i, d := range conf.OnlyMatching {
+		conf.OnlyMatching[i] = path.Join("/", d)
+	}
+
+	if conf.CacheVSN == "" {
+		conf.CacheVSN = "public, max-age=31536000"
+	}
+
+	if conf.CacheEtg == "" {
+		conf.CacheEtg = "public"
+	}
+
+	if conf.Headers == nil {
+		conf.Headers = map[string]string{}
+	}
+}
+
 var Default = Static(Config{
 	At:   "public",
 	From: "static",
 })
 
 func allow(conf *Config, r *http.Request) bool {
-	// check path based on only and prefix
-	return true
+	if !strings.HasPrefix(r.URL.Path, conf.At) {
+		return false
+	}
+
+	trimed := r.URL.Path[len(conf.At):]
+	fmt.Println("trimed", trimed)
+
+	for _, onlyMatch := range conf.OnlyMatching {
+		if strings.HasPrefix(trimed, onlyMatch) {
+			return true
+		}
+	}
+
+	for _, only := range conf.Only {
+		if strings.HasPrefix(trimed, only) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func filePath(conf *Config, r *http.Request) (string, error) {
@@ -34,18 +87,6 @@ func filePath(conf *Config, r *http.Request) (string, error) {
 }
 
 func Static(conf Config) stack.FrameFunc {
-	if conf.At == "" || conf.From == "" {
-		panic("Config.At or Config.From cant be empty")
-	}
-	if conf.CacheVSN == "" {
-		conf.CacheVSN = "public, max-age=31536000"
-	}
-	if conf.CacheEtg == "" {
-		conf.CacheEtg = "public"
-	}
-	if conf.Headers == nil {
-		conf.Headers = map[string]string{}
-	}
 
 	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		if r.Method != http.MethodGet && r.Method != http.MethodHead {
