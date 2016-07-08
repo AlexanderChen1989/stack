@@ -21,8 +21,7 @@
   * [x] Router
   * SSL
   * Session
-  * Static
-    * [ ] analys elixir-lang/plug static plug behaviours
+  * [x] Static
 * [ ] analyse elixir-lang/plug modules
   * Adapters
   * Builder
