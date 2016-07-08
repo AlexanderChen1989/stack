@@ -1,6 +1,7 @@
 package static
 
 import (
+	"fmt"
 	"net/http"
 	"path"
 	"strings"
@@ -53,7 +54,7 @@ func (conf *Config) setup() {
 	}
 }
 
-var Default = Static(Config{
+var Default = Static(&Config{
 	At:   "public",
 	From: "static",
 })
@@ -84,15 +85,17 @@ func allow(conf *Config, r *http.Request) (string, bool) {
 	return "", false
 }
 
-func Static(conf Config) stack.FrameFunc {
-
+func Static(conf *Config) stack.FrameFunc {
 	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-		if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		trimed, allowed := allow(conf, r)
+
+		if !allowed {
 			next(w, r)
 			return
 		}
 
 		// serve files
 
+		fmt.Println(trimed, allowed)
 	}
 }
