@@ -25,8 +25,8 @@ func TestConfig(t *testing.T) {
 		matched bool
 	}{
 		{"/public/images/hello.png", true},
-		{"/public/favicon.co", true},
 		{"/public/images-hello.png", false},
+		{"/public/favicon.co", true},
 		{"/public/css-style.css", true},
 		{"/public/css/style.css", true},
 	}
