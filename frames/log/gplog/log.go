@@ -116,8 +116,8 @@ func LogHandler(h log.Handler) func(config) config {
 var logKey int
 
 // Logger return inject logger instance, you have to add log Frame first
-func Logger(r *http.Request) log.FieldLeveledLogger {
-	l, ok := r.Context().Value(&logKey).(log.FieldLeveledLogger)
+func Logger(r *http.Request) log.LeveledLogger {
+	l, ok := r.Context().Value(&logKey).(log.LeveledLogger)
 	if !ok {
 		return nil
 	}
